@@ -15,10 +15,25 @@ https://www.thingiverse.com/thing:61172
 ### Examples:
 pulse the beacon 10 times with a second delay with the Green LEDs
 ```
-curl -XPOST http://localhost/beacon -d '{ "action": "pulse", "color": "BLUE", "args": { "pulses" : 10, "delay": 1000 } }'
+curl -XPOST http://localhost/beacon -d '{ "action": "pulse", "color": "BLUE", "pulses" : 10, "duration": 1000 }'
  ```
  
 persist the beacon with the RED LEDs to indicate outage
 ```
-curl -XPOST http://localhost/beacon -d '{ "action": "persist", "color": "RED", "args": {} }'
+curl -XPOST http://localhost/beacon -d '{ "action": "persist", "color": "RED" }'
+```
+
+clear the beacon
+```
+curl -XPOST http://localhost/beacon -d '{ "action": "clear" }'
+```
+
+disable the beacon
+```
+curl -XPOST http://localhost/beacon -d '{ "action": "disable" }'
+```
+
+enable the beacon
+```
+curl -XPOST http://localhost/beacon -d '{ "action": "enable" }'
 ```
