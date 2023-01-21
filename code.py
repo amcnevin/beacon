@@ -10,10 +10,9 @@ from adafruit_httpserver.response import HTTPResponse
 from adafruit_httpserver.server import HTTPMethod
 from adafruit_httpserver.status import HTTPStatus, CommonHTTPStatus
 
+from service import BeaconService
+from repository import BeaconRepository
 
-from beacon import Beacon
-from color import Color
-from action import ActionFactory
 
 ssid = os.getenv("CIRCUITPY_WIFI_SSID")
 pwd = os.getenv("CIRCUITPY_WIFI_PASSWORD")
@@ -26,21 +25,20 @@ print(f"Listening on http://{wifi.radio.ipv4_address}:80")
 
 pool = socketpool.SocketPool(wifi.radio)
 server = HTTPServer(pool)
-beacon = Beacon()
-
+# Inversion of Control
+repo = BeaconRepository()
+service = BeaconService(repo)
 
 @server.route("/beacon", method=HTTPMethod.POST)
 def update_beacon(request):
-
+    """
+    POST to update the beacon
+    """
     try:
-        print(request.body)
-        body = json.loads(request.body)
-        print(body)
-        action = ActionFactory.build(body)
-
-        beacon.process_action(action)
-
-        value = ""
+        action = json.loads(request.body)
+        # TODO add action validation
+        service.process_action(action)
+        value = "OK"
         status = CommonHTTPStatus.OK_200
     except ValueError as ve:
         value = f"Bad Request: {ve}"
@@ -51,10 +49,11 @@ def update_beacon(request):
 
 @server.route("/health")
 def get_health(request):
+    # TODO move this to a HealthProvider or HealthIndicator pattern
     status = {}
-
+    # TODO determine what constitutes a YELLOW or RED state? maybe enabled?
     status["health"] = "GREEN"
-    status["enabled"] = beacon.enabled
+    status["enabled"] = service.is_enabled()
     status["temp"]= microcontroller.cpu.temperature
     status["frequency"] = microcontroller.cpu.frequency
     status["voltage"] = microcontroller.cpu.voltage
