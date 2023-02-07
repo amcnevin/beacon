@@ -8,7 +8,6 @@ class BeaconService:
         self.enabled = True
         self.repository = repository
 
-
     def process_action(self, action: dict):
         """
         map the input action args to the appropriate function

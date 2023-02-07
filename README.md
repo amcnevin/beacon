@@ -10,7 +10,11 @@ This web server that routes actions to interact with the pico's GPIO pins. The i
 This will be paired with a 3d printed crystal that I'm butchering with a Dremel tool for now...
 https://www.thingiverse.com/thing:61172
 
+### install
 
+```
+circup install adafruit-circuitpython-httppserver
+```
 
 ### Examples:
 pulse the beacon 10 times with a second delay with the Green LEDs

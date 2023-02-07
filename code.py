@@ -44,7 +44,8 @@ def update_beacon(request):
         value = f"Bad Request: {ve}"
         status = CommonHTTPStatus.BAD_REQUEST_400
 
-    return HTTPResponse(body=value, status=status)
+    response = HTTPResponse(request=request, status=status)
+    return response.send(body=value)
 
 
 @server.route("/health")
@@ -54,10 +55,11 @@ def get_health(request):
     # TODO determine what constitutes a YELLOW or RED state? maybe enabled?
     status["health"] = "GREEN"
     status["enabled"] = service.is_enabled()
-    status["temp"]= microcontroller.cpu.temperature
+    status["temp"] = microcontroller.cpu.temperature
     status["frequency"] = microcontroller.cpu.frequency
     status["voltage"] = microcontroller.cpu.voltage
-    return HTTPResponse(body=json.dumps(status))
+    response = HTTPResponse(request=request, status=CommonHTTPStatus.OK_200)
+    return response.send(body=json.dumps(status))
 
 
 
