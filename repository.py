@@ -1,7 +1,6 @@
 from color import Color
 import board
 from digitalio import DigitalInOut, Direction
-from time import sleep
 
 class BeaconRepository:
 
@@ -14,35 +13,44 @@ class BeaconRepository:
             self.init_pin(board.GP1),
             self.init_pin(board.GP2)]
 
+        self.pin_map[Color.RED] = [
+            self.init_pin(board.GP3),
+            self.init_pin(board.GP4),
+            self.init_pin(board.GP5)]
+
+        self.pin_map[Color.GREEN] = [
+            self.init_pin(board.GP6),
+            self.init_pin(board.GP7),
+            self.init_pin(board.GP8)]
+
+        self.pin_map[Color.YELLOW] = [
+            self.init_pin(board.GP9),
+            self.init_pin(board.GP10),
+            self.init_pin(board.GP11)]
+
+        self.pin_map[Color.ORANGE] = [
+            self.init_pin(board.GP12),
+            self.init_pin(board.GP13),
+            self.init_pin(board.GP14)]
+
+        self.pin_map[Color.PURPLE] = [
+            self.init_pin(board.GP15),
+            self.init_pin(board.GP16),
+            self.init_pin(board.GP17)]
+
     def init_pin(self, pin):
         dio = DigitalInOut(pin)
         dio.direction = Direction.OUTPUT
         return dio
 
-    def persist(self, color: Color):
-        """
-        Persist High on all pins mapped to color
-        """
-
-        # TODO add GPIO logic
-        print(f"LOG: Persisting {color}")
-
-    def pulse(self, color: Color, duration: int):
-        """
-        Pulse High on all pins mapped to color
-        """
+    def toggle_color(self, color: Color):
         for pin in self.pin_map[color]:
-            pin.value = True
-        sleep(duration)
-        for pin in self.pin_map[color]:
-            pin.value = False
-
-        # TODO add GPIO logic
-        print(f"LOG: Pulse {color} for {duration} ms")
+            pin.value = not pin.value
 
     def clear(self):
         """
         Clear all GPIO pins
         """
-        # TODO iterate over all values in pin map
-        print("LOG: CLEAR")
+        for pin_list in self.pin_map.values():
+            for pin in pin_list:
+                pin.value = False

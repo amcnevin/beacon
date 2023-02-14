@@ -1,5 +1,7 @@
 from color import Color
 from repository import BeaconRepository
+from time import sleep
+from morse_code import Morse
 
 class BeaconService:
 
@@ -18,6 +20,10 @@ class BeaconService:
             self.pulse(action)
         elif action_type == "persist":
             self.persist(action)
+        elif action_type == "cycle":
+            self.cycle(action)
+        elif action_type == "morse":
+            self.morse(action)
         elif action_type == "clear":
             self.clear()
         elif action_type == "enable":
@@ -35,9 +41,12 @@ class BeaconService:
         if self.can_action():
             color = self.get_color(args)
             pulses = args.get("pulses", 1)
-            duration = args.get("duration", 1000)
+            duration = args.get("duration", 1)
             for i in range(pulses):
-                self.repository.pulse(color, duration)
+                self.repository.toggle_color(color)
+                sleep(duration)
+                self.repository.toggle_color(color)
+                sleep(duration)
 
     def persist(self, args: dict):
         """
@@ -45,8 +54,32 @@ class BeaconService:
         """
         if self.can_action():
             color = self.get_color(args)
-            self.repository.persist(color)
+            self.repository.clear()
+            self.repository.toggle_color(color)
             self.persisted = True
+
+    def cycle(self, args: dict):
+        """
+        cycle through a list of colors
+        """
+        if self.can_action():
+            colors = args.get("colors", [])
+            duration = args.get("duration", 1)
+            print("CYCLE")
+            print(colors)
+            for color in colors:
+                color = getattr(Color, color)
+                self.repository.toggle_color(color)
+                sleep(duration)
+                self.repository.toggle_color(color)
+
+    def morse(self, args: dict):
+        if self.can_action():
+            color = self.get_color(args)
+            phrase = args.get("phrase", "LOL")
+            morse = Morse(self.repository)
+            morse.morse_code(color, phrase)
+
 
     def clear(self):
         """
@@ -94,3 +127,9 @@ class BeaconService:
             return getattr(Color, args["color"])
         except AttributeError as ae:
             raise ValueError("color not recognized")
+
+    def get_colors(self, args: dict) -> list:
+        try:
+            return getattr(list, args["colors"])
+        except AttributeError as ae:
+            raise ValueError("colors not recognized")
