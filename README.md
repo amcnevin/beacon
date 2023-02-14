@@ -16,28 +16,13 @@ https://www.thingiverse.com/thing:61172
 circup install adafruit-circuitpython-httppserver
 ```
 
-### Examples:
-pulse the beacon 10 times with a second delay with the Green LEDs
-```
-curl -XPOST http://localhost/beacon -d '{ "action": "pulse", "color": "BLUE", "pulses" : 10, "duration": 1000 }'
- ```
- 
-persist the beacon with the RED LEDs to indicate outage
-```
-curl -XPOST http://localhost/beacon -d '{ "action": "persist", "color": "RED" }'
-```
-
-clear the beacon
-```
-curl -XPOST http://localhost/beacon -d '{ "action": "clear" }'
-```
-
-disable the beacon
-```
-curl -XPOST http://localhost/beacon -d '{ "action": "disable" }'
-```
-
-enable the beacon
-```
-curl -XPOST http://localhost/beacon -d '{ "action": "enable" }'
-```
+### Actions
+| Action  | Desc                      | Args                    | 
+|---------|---------------------------|-------------------------|
+| pulse   | blinks a color            | color, pulses, duration |
+| persist | enables a color           | color                   |
+| cycle   | rotates among colors      | colors, duration        |
+| morse   | emits color in morse code | color, phrase           |
+| clear   | flushes off all colors    |                         |
+| enable  | enables the service       |                         |
+| disable | disables the service      |                         |
