@@ -3,6 +3,25 @@ from repository import BeaconRepository
 from time import sleep
 from morse_code import Morse
 
+
+def get_color(args: dict) -> Color :
+    """
+    map the color from arguments
+    raise a ValueError if we cannot map
+    """
+    try:
+        return getattr(Color, args["color"])
+    except AttributeError as ae:
+        raise ValueError("color not recognized")
+
+
+def get_colors(args: dict) -> list:
+    try:
+        return getattr(list, args["colors"])
+    except AttributeError as ae:
+        raise ValueError("colors not recognized")
+
+
 class BeaconService:
 
     def __init__(self, repository: BeaconRepository):
@@ -33,15 +52,14 @@ class BeaconService:
         else:
             ValueError("action not recognized")
 
-
     def pulse(self, args: dict):
         """
         pulse the beacon with the provided args
         """
         if self.can_action():
-            color = self.get_color(args)
-            pulses = args.get("pulses", 1)
-            duration = args.get("duration", 1)
+            color = get_color(args)
+            pulses = int(args.get("pulses", 1))
+            duration = int(args.get("duration", 1))
             for i in range(pulses):
                 self.repository.toggle_color(color)
                 sleep(duration)
@@ -53,7 +71,7 @@ class BeaconService:
         persist the beacon with the provided args
         """
         if self.can_action():
-            color = self.get_color(args)
+            color = get_color(args)
             self.repository.clear()
             self.repository.toggle_color(color)
             self.persisted = True
@@ -64,7 +82,7 @@ class BeaconService:
         """
         if self.can_action():
             colors = args.get("colors", [])
-            duration = args.get("duration", 1)
+            duration = int(args.get("duration", 1))
             print("CYCLE")
             print(colors)
             for color in colors:
@@ -75,11 +93,10 @@ class BeaconService:
 
     def morse(self, args: dict):
         if self.can_action():
-            color = self.get_color(args)
+            color = get_color(args)
             phrase = args.get("phrase", "LOL")
             morse = Morse(self.repository)
             morse.morse_code(color, phrase)
-
 
     def clear(self):
         """
@@ -104,7 +121,6 @@ class BeaconService:
         self.clear()
         self.enabled = False
 
-
     def can_action(self) -> bool:
         """
         determine if were in an actionable state
@@ -117,19 +133,3 @@ class BeaconService:
         """
         return self.enabled
 
-
-    def get_color(self, args: dict) -> Color :
-        """
-        map the color from arguments
-        raise a ValueError if we cannot map
-        """
-        try:
-            return getattr(Color, args["color"])
-        except AttributeError as ae:
-            raise ValueError("color not recognized")
-
-    def get_colors(self, args: dict) -> list:
-        try:
-            return getattr(list, args["colors"])
-        except AttributeError as ae:
-            raise ValueError("colors not recognized")

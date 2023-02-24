@@ -37,6 +37,7 @@ def update_beacon(request):
     try:
         action = json.loads(request.body)
         # TODO add action validation
+        print(action)
         service.process_action(action)
         value = "OK"
         status = CommonHTTPStatus.OK_200

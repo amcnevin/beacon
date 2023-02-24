@@ -14,29 +14,29 @@ class BeaconRepository:
             self.init_pin(board.GP2)]
 
         self.pin_map[Color.RED] = [
-            self.init_pin(board.GP3),
-            self.init_pin(board.GP4),
-            self.init_pin(board.GP5)]
+            self.init_pin(board.GP7),
+            self.init_pin(board.GP8),
+            self.init_pin(board.GP9)]
 
         self.pin_map[Color.GREEN] = [
-            self.init_pin(board.GP6),
-            self.init_pin(board.GP7),
-            self.init_pin(board.GP8)]
+            self.init_pin(board.GP13),
+            self.init_pin(board.GP14),
+            self.init_pin(board.GP15)]
 
         self.pin_map[Color.YELLOW] = [
-            self.init_pin(board.GP9),
-            self.init_pin(board.GP10),
-            self.init_pin(board.GP11)]
+            self.init_pin(board.GP17),
+            self.init_pin(board.GP18),
+            self.init_pin(board.GP19)]
 
         self.pin_map[Color.ORANGE] = [
-            self.init_pin(board.GP12),
-            self.init_pin(board.GP13),
-            self.init_pin(board.GP14)]
+            self.init_pin(board.GP20),
+            self.init_pin(board.GP21),
+            self.init_pin(board.GP22)]
 
         self.pin_map[Color.PURPLE] = [
-            self.init_pin(board.GP15),
-            self.init_pin(board.GP16),
-            self.init_pin(board.GP17)]
+            self.init_pin(board.GP28),
+            self.init_pin(board.GP27),
+            self.init_pin(board.GP26)]
 
     def init_pin(self, pin):
         dio = DigitalInOut(pin)
